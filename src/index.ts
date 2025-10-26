@@ -1,5 +1,6 @@
 // import packages 
 import express from 'express' 
+import mssql, { ConnectionPool } from 'mssql'
 import dotenv from 'dotenv'
 import userRoutes from './router/users.routes'
 
