@@ -45,23 +45,25 @@ export const createNewProject = async (req: Request, res: Response) => {
 
 //update a project
 export const updateProject = async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id);
-    const project = req.body
-    try {
-        const result = await projectServices.updateProject(id, project)
-        res.status(200).json(result)
-    } catch (error: any) {
-        if (error.message === 'Inavlid projectid') {
-            res.status(400).json({ message: 'Inavlid projectid' })
-        } else if (error.message == 'project not found') {
-            res.status(404).json({ message: 'Project not found' })
-        } else {
-            res.status(500).json({ error: 'Internal server error' })
-        }
+  const id = parseInt(req.params.id, 10);
+  const projectData = req.body;
 
+  try {
+    const result = await projectServices.updateProject(id, projectData);
+    res.status(200).json(result);
+  } catch (error: any) {
+    if (error.message === "Invalid project ID") {
+      res.status(400).json({ message: "Invalid project ID" });
+    } else if (error.message === "Project not found") {
+      res.status(404).json({ message: "Project not found" });
+    } else if (error.message === "No data provided for update") {
+      res.status(400).json({ message: "No fields provided for update" });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+      console.error("Error updating project:", error);
     }
-
-}
+  }
+};
 
 
 // delete a project by id
@@ -70,7 +72,7 @@ export const deleteProject = async (req: Request, res: Response) => {
 
     try {
         const result = await projectServices.deleteProject(id)
-        res.status(204).json(result)
+        res.status(200).json(result)
     } catch (error: any) {
         if (error.message === 'Inavlid projectid') {
             res.status(400).json({ message: 'Inavlid projectid' })
@@ -78,7 +80,7 @@ export const deleteProject = async (req: Request, res: Response) => {
             res.status(404).json({ message: 'Project not found' })
         } else {
 
-            res.status(500).json({ error: 'Internal server error' })
+            res.status(500).json({ error: error.message })
         }
 
     }
