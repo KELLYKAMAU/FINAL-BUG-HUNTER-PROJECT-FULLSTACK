@@ -7,6 +7,7 @@ import projectRoutes from './router/project.routes'
 
 // import modules 
 import { getPool } from './db/config'
+import bugsRoutes from './router/bugs.routes'
 
 
 // initialize the express app object - stores all express functions in the app object
@@ -16,7 +17,8 @@ const app = express()
 app.use(express.json()); //parse json files
 
 userRoutes(app);
-projectRoutes(app)
+projectRoutes(app),
+bugsRoutes(app);
 
 // load .env file variables 
 dotenv.config()

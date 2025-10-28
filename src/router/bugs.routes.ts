@@ -5,11 +5,11 @@ import * as bugsController  from '../controllers/bugs.controller';
 
 const bugsRoutes = (app: Express) => {
     
-        app.get("/bugs", bugsController.getAllbugs);
-        app.get("/bugs/:id", bugsController.getbugsById);
-        app.post("/bugs", bugsController.createBug);
-        app.put("/bugs/:id", bugsController.updatebugs);
-        app.delete("/bugs/:id", bugsController.deleteBugs);
+        app.get("/getbugs", bugsController.listbyProject);
+        app.get("/bugs/:id", bugsController.getBug);
+        app.post("/createbug", bugsController.createBug);
+        app.put("/bugs/:id", bugsController.updateBug);
+        app.delete("/bugs/:id", bugsController.deleteBug);
 };
 
 
