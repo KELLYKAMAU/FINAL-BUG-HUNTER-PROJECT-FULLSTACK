@@ -57,3 +57,23 @@ export class BugsController {
     }
   }
 }
+
+export function getAllbugs(arg0: string, getAllbugs: any) {
+    throw new Error('Function not implemented.');
+}
+export function getbugsById(arg0: string, getbugsById: any) {
+    throw new Error('Function not implemented.');
+}
+
+export function createBug(arg0: string, createBug: any) {
+    throw new Error('Function not implemented.');
+}
+
+export function updatebugs(arg0: string, updatebugs: any) {
+    throw new Error('Function not implemented.');
+}
+
+export function deleteBugs(arg0: string, deleteBugs: any) {
+    throw new Error('Function not implemented.');
+}
+
