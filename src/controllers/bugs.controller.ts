@@ -5,22 +5,22 @@ import { BugsService } from '../services/bugs.services';
 const service = new BugsService();
 
 export class BugsController {
-  // 🟢 Create a new bug
+  // Create a new bug
   static async create(req: Request, res: Response) {
     try {
       const payload = req.body;
-      const id = await service.createBug(payload);
-      return res.status(201).json({ bugid: id, message: 'Bug created successfully' });
+      const result = await service.createBug(payload);
+      return res.status(201).json( {message: 'Bug created successfully' });
     } catch (error: any) {
       console.error('Error creating bug:', error.message);
       return res.status(400).json({ error: error.message || 'Failed to create bug' });
     }
   }
 
-  // 🟢 Get a bug by ID
+  //  Get a bug by ID
   static async get(req: Request, res: Response) {
     try {
-      const bugid = parseInt(req.params.bugid);
+      const bugid = parseInt(req.params.id);
       if (isNaN(bugid)) throw new Error('Invalid bug ID');
 
       const bug = await service.getBug(bugid);
@@ -36,7 +36,7 @@ export class BugsController {
   // 🟢 Get all bugs for a project
   static async listByProject(req: Request, res: Response) {
     try {
-      const projectid = parseInt(req.params.projectid);
+      const projectid = parseInt(req.params.project_id);
       if (isNaN(projectid)) throw new Error('Invalid project ID');
 
       const bugs = await service.listByProject(projectid);
@@ -66,7 +66,7 @@ export class BugsController {
   // 🟢 Delete a bug
   static async remove(req: Request, res: Response) {
     try {
-      const bugid = parseInt(req.params.bugid);
+      const bugid = parseInt(req.params.id);
       if (isNaN(bugid)) throw new Error('Invalid bug ID');
 
       await service.deleteBug(bugid);
@@ -76,25 +76,39 @@ export class BugsController {
       return res.status(400).json({ error: error.message
         || 'Failed to delete bug' });
     }
-  }   
-}    
+  }  
+  // 🟢 Get all bugs
+  static async getAll(req: Request, res: Response) {
+    try {
+      const bugs = await service.getAllBugs();
+      return res.status(200).json(bugs);
+    } catch (error: any) {
+      console.error('Error fetching all bugs:', error.message);
+      return res.status(500).json({ error: error.message || 'Failed to retrieve bugs' });
+    } 
 
-export function listbyProject(arg0: string, listbyProject: any) {
+
+}    }
+
+export function listbyProject(arg0: any, listbyProject: any) {
+    BugsController.listByProject(arg0, listbyProject);
+}
+export function getAll(arg0: any, getAll: any) {
+   BugsController.getAll(arg0, getAll);
+}
+export function getBug(arg0: any, getBug: any) {
+    BugsController.get(arg0, getBug);
+}
+
+export function createBug(arg0: any, createBug: any) {
+   BugsController.create(arg0, createBug);
+}
+
+export function updateBug(arg0: any, updateBug: any) {
     throw new Error('Function not implemented.');
 }
-export function getBug(arg0: string, getBug: any) {
-    throw new Error('Function not implemented.');
-}
 
-export function createBug(arg0: string, createBug: any) {
-    throw new Error('Function not implemented.');
-}
-
-export function updateBug(arg0: string, updateBug: any) {
-    throw new Error('Function not implemented.');
-}
-
-export function deleteBug(arg0: string, deleteBug: any) {
-    throw new Error('Function not implemented.');
+export function deleteBug(arg0: any, deleteBug: any) {
+    BugsController.remove(arg0, deleteBug);    
 }
 

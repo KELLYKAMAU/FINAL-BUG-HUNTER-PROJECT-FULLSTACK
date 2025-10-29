@@ -5,11 +5,11 @@ import { Bug } from '../Types/bugs.types';
 export class BugsService {
   private repo = new BugsRepository();
 
-  // 🟢 Create new bug
-  async createBug(payload: Bug): Promise<number> {
+  // Create new bug
+  async createBug(payload: Bug) {
     if (!payload.title || payload.title.length < 3)
       throw new Error('Title is required and must be at least 3 characters');
-    if (!payload.projectid)
+    if (!payload.project_id)
       throw new Error('Project ID is required');
 
     payload.status = payload.status ?? 'open';
@@ -17,11 +17,17 @@ export class BugsService {
     payload.created_at = new Date();
     payload.updated_at = new Date();
 
-    const id = await this.repo.create(payload);
-    return id;
+    const result = await this.repo.create(payload);
+    return result;
   }
 
-  // 🟢 Get a single bug by ID
+  // get all bugs
+  async getAllBugs(): Promise<Bug[]> {
+    const bugs = await this.repo.getAllBugs();
+    return bugs;
+  }
+
+  //  Get a single bug by ID
   async getBug(bugid: number): Promise<Bug | null> {
     if (!bugid || bugid <= 0) throw new Error('Invalid bug ID');
     const bug = await this.repo.findById(bugid);
@@ -29,7 +35,7 @@ export class BugsService {
     return bug;
   }
 
-  // 🟢 Get all bugs by project (with validation)
+  //  Get all bugs by project (with validation)
   async listByProject(projectid: number): Promise<Bug[]> {
     if (!projectid || projectid <= 0)
       throw new Error('Invalid project ID');

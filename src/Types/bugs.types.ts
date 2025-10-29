@@ -1,7 +1,7 @@
 
 export interface Bug {
   bugid?: number;          // optional for inserts
-  projectid: number;
+  project_id: number;
   reported_by: number;
   assigned_to?: number | null;
   title: string;

@@ -7,10 +7,11 @@ import { Bug } from '../Types/bugs.types';
 export class BugsRepository {
   private table = 'Bugs';
 
-  async create(b: Bug): Promise<number> {
+  async create(b: Bug) {
     const pool = await getPool();
     const result = await pool.request()
-      .input('projectid', mssql.Int, b.projectid)
+
+      .input('project_id', mssql.Int, b.project_id)
       .input('reported_by', mssql.Int, b.reported_by)
       .input('assigned_to', mssql.Int, b.assigned_to ?? null)
       .input('title', mssql.VarChar(150), b.title)
@@ -20,27 +21,35 @@ export class BugsRepository {
       .input('created_at', mssql.DateTime, b.created_at ?? new Date())
       .input('updated_at', mssql.DateTime, b.updated_at ?? new Date())
       .query(`
-        INSERT INTO ${this.table} (projectid, reported_by, assigned_to, title, description, severity, status, created_at, updated_at)
-        OUTPUT INSERTED.bugid
-        VALUES (@projectid, @reported_by, @assigned_to, @title, @description, @severity, @status, @created_at, @updated_at)
+        INSERT INTO ${this.table} (project_id, reported_by, assigned_to, title, description, severity, status, created_at, updated_at)
+                
+        VALUES (@project_id, @reported_by, @assigned_to, @title, @description, @severity, @status, @created_at, @updated_at)
       `);
-    return result.recordset[0].bugid;
+    return result.recordset
+    
+    
   }
 
-  async findById(bugid: number): Promise<Bug | null> {
+  async getAllBugs(): Promise<Bug[]> {
+    const pool = await getPool();
+    const result = await pool.request().query(`SELECT * FROM ${this.table}`);
+    return result.recordset;
+  }
+
+  async findById(bug_id: number): Promise<Bug | null> {
     const pool = await getPool();
     const result = await pool.request()
-      .input('bugid', mssql.Int, bugid)
-      .query(`SELECT * FROM ${this.table} WHERE bugid = @bugid`);
+      .input('bug_id', mssql.Int, bug_id)
+      .query(`SELECT * FROM ${this.table} WHERE bug_id = @bug_id`);
     return result.recordset[0] ?? null;
   }
 
-  async findAllByProject(projectid: number): Promise<Bug[]> {
+  async findAllByProject(project_id: number): Promise<Bug[]> {
     const pool = await getPool();
     const res = await pool.request()
-      .input('projectid', mssql.Int, projectid)
-      .query(`SELECT * FROM ${this.table} WHERE projectid = @projectid ORDER BY created_at DESC`);
-    return res.recordset;
+      .input('project_id', mssql.Int, project_id)
+      .query(`SELECT * FROM ${this.table} WHERE project_id = @project_id ORDER BY created_at DESC`);
+    return res.recordset || [];
   }
 
   async update(bugid: number, updates: Partial<Bug>): Promise<void> {
@@ -65,8 +74,8 @@ export class BugsRepository {
     await req.query(sql);
   }
 
-  async delete(bugid: number): Promise<void> {
+  async delete(bug_id: number): Promise<void> {
     const pool = await getPool();
-    await pool.request().input('bugid', mssql.Int, bugid).query(`DELETE FROM ${this.table} WHERE bugid = @bugid`);
+    await pool.request().input('bug_id', mssql.Int, bug_id).query(`DELETE FROM ${this.table} WHERE bug_id = @bug_id`);
   }
 }

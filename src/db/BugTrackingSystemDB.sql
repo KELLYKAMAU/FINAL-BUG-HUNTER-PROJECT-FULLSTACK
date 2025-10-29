@@ -52,8 +52,8 @@ CREATE TABLE Bugs (
     created_at DATETIME,
     updated_at DATETIME,
     FOREIGN KEY (projectid) REFERENCES Projects(projectid),
-    FOREIGN KEY (reported_by) REFERENCES Users(userid),
-    FOREIGN KEY (assigned_to) REFERENCES Users(userid)
+    FOREIGN KEY (reported_by) REFERENCES Users(userid) ,
+    FOREIGN KEY (assigned_to) REFERENCES Users(userid) 
 );
 -- Sample data for Bugs table
 INSERT INTO Bugs (projectid, reported_by, assigned_to, title, description, severity, status, created_at, updated_at)
@@ -64,6 +64,8 @@ VALUES
 
 -- view Bugs records 
 SELECT *FROM Bugs
+
+
 
 -- comments table
 CREATE TABLE Comments (
