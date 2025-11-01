@@ -4,6 +4,7 @@ import mssql, { ConnectionPool } from 'mssql'
 import dotenv from 'dotenv'
 import userRoutes from './router/users.routes'
 import projectRoutes from './router/project.routes'
+import commentRoutes from './router/comments.routes'
 
 // import modules 
 import { getPool } from './db/config'
@@ -19,6 +20,7 @@ app.use(express.json()); //parse json files
 userRoutes(app);
 projectRoutes(app),
 bugsRoutes(app);
+commentRoutes(app)
 
 // load .env file variables 
 dotenv.config()

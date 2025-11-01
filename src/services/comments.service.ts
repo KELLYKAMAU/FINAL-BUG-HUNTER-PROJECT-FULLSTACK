@@ -1,30 +1,64 @@
-import * as commentsRepo from "../Repositories/comments.repository";
+import * as commentRepository from "../Repositories/comments.repository";
+import { Comment, UpdateComment } from "../Types/comments.types";
 
 export const getAllComments = async () => {
-  return await commentsRepo.getAllComments();
+  return await commentRepository.getAllComments();
 };
 
+export const getCommentsByBugId = async (bugid: number) => {
+  return await commentRepository.getCommentsByBugId(bugid);
+};
+// Retrieves a single comment by its ID.
 export const getCommentById = async (id: number) => {
-  const comment = await commentsRepo.getCommentById(id);
-  if (!comment) throw new Error("Comment not found");
-  return comment;
-};
-
-export const createComment = async (comment: any) => {
-  if (!comment.bugid || !comment.userid || !comment.content) {
-    throw new Error("Missing required fields");
+  // Validate the ID
+  if (isNaN(id)) {
+    throw new Error("Invalid comment ID");
   }
-  await commentsRepo.createComment(comment);
+
+  // Ask the repository for the comment
+  const comment = await commentRepository.getCommentById(id);
+
+  // Check if the comment exists
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+
+  // Return the found comment
+  return {
+    message: "Comment retrieved successfully",
+    comment,
+  };
 };
 
-export const updateComment = async (id: number, content: string) => {
-  const existing = await commentsRepo.getCommentById(id);
-  if (!existing) throw new Error("Comment not found");
-  await commentsRepo.updateComment(id, content);
+
+export const createComment = async (comment: Comment) => {
+  if (!comment.content || !comment.userid || !comment.bugid) {
+    throw new Error("Missing required fields: bugid, userid, or content");
+  }
+  await commentRepository.createComment(comment);
 };
 
-export const deleteComment = async (id: number) => {
-  const existing = await commentsRepo.getCommentById(id);
-  if (!existing) throw new Error("Comment not found");
-  await commentsRepo.deleteComment(id);
+export const deleteComment = async (commentid: number) => {
+  await commentRepository.deleteComment(commentid);
 };
+
+export const updateComment = async (id: number, commentData: UpdateComment) => {
+  // Validate inputs
+  if (isNaN(id)) throw new Error("Invalid comment ID");
+  if (!commentData || Object.keys(commentData).length === 0)
+    throw new Error("No data provided for update");
+
+  // Confirm comment exists before updating
+  const existingComment = await commentRepository.getCommentById(id);
+  if (!existingComment) throw new Error("Comment not found");
+
+  // Ask repository to perform update
+  const result = await commentRepository.updateComment(id, commentData);
+
+  // Just return the message from repo
+  return result;
+};
+
+
+
+

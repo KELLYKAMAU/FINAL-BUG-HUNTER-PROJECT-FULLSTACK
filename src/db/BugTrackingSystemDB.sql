@@ -86,6 +86,7 @@ VALUES
 
 -- view records in comments table 
 SELECT *FROM Comments 
+SELECT *FROM Bugs
 
 -- -- Drop tables if needed
 -- DROP TABLE IF EXISTS Users;

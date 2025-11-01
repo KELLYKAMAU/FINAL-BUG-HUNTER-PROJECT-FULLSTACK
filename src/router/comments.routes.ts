@@ -1,12 +1,15 @@
-import express from "express";
-import * as commentsController from "../controllers/comments.controllers";
+import { Express } from "express";
+import * as commentController from "../controllers/comments.controllers";
 
-const router = express.Router();
+const commentRoutes = (app:Express) => {
 
-router.get("/", commentsController.getAllComments);
-router.get("/:id", commentsController.getCommentById);
-router.post("/", commentsController.createComment);
-router.put("/:id", commentsController.updateComment);
-router.delete("/:id", commentsController.deleteComment);
+// Routes for Comments
+app.get("/comments", commentController.getAllComments);
+app.get("/comments/:bugid", commentController.getCommentsByBugId);
+app.post("/comments", commentController.createComment);
+app.delete("/comments/:commentid", commentController.deleteComment);
+app.put("/comments/:id", commentController.updateComment);
 
-export default router;
+}
+export default commentRoutes ;
+
