@@ -4,7 +4,7 @@ import { adminOnly, allRoles } from "../middleware/bearAuth";
 
 const userRoutes = (app: Express) => {
     // Get all users
-    app.get("/users", adminOnly, userController.getUsers);
+    app.get("/users",userController.getUsers);
 
     // Get a specific user by ID
     app.get("/users/:id", allRoles, userController.getUserById);
@@ -13,7 +13,8 @@ const userRoutes = (app: Express) => {
     app.post("/users", adminOnly, userController.createUser);
 
     // Update an existing user
-    app.patch("/users/:id", allRoles, userController.updateUser);
+    app.patch("/users/:id",
+         userController.updateUser);
 
     // Delete a user
     app.delete("/users/:id", adminOnly, userController.deleteUser);

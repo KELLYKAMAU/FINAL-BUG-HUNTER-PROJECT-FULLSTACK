@@ -32,6 +32,9 @@ export const getUser =async(id:number)=>{
 
 // create user by Id and hash their password 
 export const createUser = async(user:NewUser)=>{
+    // check if email already exist 
+    const exists = await userRepositories.emailExists(user.email);
+    if(exists) throw new Error ('Email already exists')
     // hash pass b4 saving 
     if(user.password_hash){
         user.password_hash=await bcrypt.hash(user.password_hash,10)

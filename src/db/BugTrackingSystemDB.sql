@@ -6,8 +6,11 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     role_user VARCHAR(20) NOT NULL CHECK (role_user IN ('admin', 'developer', 'tester')),
     password_hash VARCHAR(255) NOT NULL,
-    created_at DATETIME 
+    is_active BIT DEFAULT 1,                -- helps with soft deletes or suspensions
+    created_at DATETIME DEFAULT GETDATE(),  -- auto-timestamp when inserted
+    updated_at DATETIME DEFAULT GETDATE()   -- useful when profile changes
 );
+
 -- Sample data for Users table
 INSERT INTO Users (first_name, last_name, email, role_user, password_hash, created_at)
 VALUES
@@ -24,10 +27,14 @@ CREATE TABLE Projects (
     projectid INT IDENTITY(1,1) PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
     description TEXT,
-    created_by INT NOT NULL,
-    created_at DATETIME,
+    status VARCHAR(20) DEFAULT 'active' 
+        CHECK (status IN ('active', 'on-hold', 'completed', 'archived')),
+    created_by INT NOT NULL, -- project lead (creator)
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (created_by) REFERENCES Users(userid)
 );
+
 -- Sample data for Projects table
 INSERT INTO Projects (title, description, created_by, created_at)
 VALUES
@@ -36,7 +43,23 @@ VALUES
 ('Learning Management Portal', 'Platform for managing courses and student progress.', 1, GETDATE());
 
 -- view projects records 
-SELECT *FROM Projects
+ 
+-- DELETE FROM Projects WHERE projectid=19
+
+-- user project table 
+CREATE TABLE UserProject (
+  id INT IDENTITY(1,1) PRIMARY KEY,
+  projectid INT NOT NULL,
+  userid INT NOT NULL,
+  role_in_project VARCHAR(20)
+      CHECK (role_in_project IN ('lead', 'developer', 'tester')),
+  assigned_at DATETIME DEFAULT GETDATE(),
+  FOREIGN KEY (projectid) REFERENCES Projects(projectid),
+  FOREIGN KEY (userid) REFERENCES Users(userid),
+  CONSTRAINT UQ_ProjectMember UNIQUE (projectid, userid)
+);
+
+SELECT *FROM UserProject
 
 
 -- bugs table
@@ -90,7 +113,9 @@ SELECT *FROM Bugs
 
 -- -- Drop tables if needed
 -- DROP TABLE IF EXISTS Users;
--- DROP TABLE IF EXISTS Projects;
+DROP TABLE IF EXISTS Projects;
+DROP TABLE IF EXISTS UserProject;
+
 -- DROP TABLE IF EXISTS Comments;
 -- DROP TABLE IF EXISTS Bugs;
 
