@@ -1,6 +1,9 @@
 // import packages 
 import express from 'express' 
+import mssql, { ConnectionPool } from 'mssql'
 import dotenv from 'dotenv'
+import userRoutes from './router/users.routes'
+import projectRoutes from './router/project.routes'
 
 // import modules 
 import { getPool } from './db/config'
@@ -11,6 +14,9 @@ const app = express()
 
 // middlewares 
 app.use(express.json()); //parse json files
+
+userRoutes(app);
+projectRoutes(app)
 
 // load .env file variables 
 dotenv.config()
@@ -26,6 +32,8 @@ const port=process.env.PORT||8081
 app.listen(port,()=>{
     console.log(`Server is running on port: http://localhost:${port}`)
 })
+
+
 
 //define root route. check that endpoint works
 app.get('/',(_,res)=>{
