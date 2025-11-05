@@ -5,9 +5,16 @@ import { Request, Response, NextFunction } from 'express';
 dotenv.config();
 
 interface JwtPayload {
-  user_id: number;
+  userid: number;
   role: "admin" | "developer" | "tester";
 }
+
+
+export const getAuthUser = (req: Request) => {
+  const user = (req as any).user;
+  return { userId: user.sub, role: user.role };
+};
+
 
 // Middleware factory for checking roles
 export const checkroles = (

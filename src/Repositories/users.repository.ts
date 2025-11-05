@@ -19,6 +19,22 @@ export const getUserById = async (id: number): Promise<User[]> => {
     return result.recordset[0];
 };
 
+// get active users only 
+export const getActiveUsers = async (): Promise<User[]> => {
+  const pool = await getPool();
+  const result = await pool.request().query('SELECT * FROM Users WHERE is_active = 1');
+  return result.recordset;
+};
+
+// check if email already exists 
+export const emailExists = async (email: string): Promise<boolean> => {
+  const pool = await getPool();
+  const result = await pool.request()
+    .input('email', email)
+    .query('SELECT COUNT(*) as count FROM Users WHERE email = @email');
+  return result.recordset[0].count > 0;
+};
+
 //create new user
 export const createUser = async (user: NewUser) => {
     const pool = await getPool();
