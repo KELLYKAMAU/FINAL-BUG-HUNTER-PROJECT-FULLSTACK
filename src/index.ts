@@ -9,6 +9,7 @@ import commentRoutes from './router/comments.routes'
 // import modules 
 import { getPool } from './db/config'
 import bugsRoutes from './router/bugs.routes'
+import router from './router/comments.routes'
 
 
 // initialize the express app object - stores all express functions in the app object
@@ -22,6 +23,8 @@ projectRoutes(app),
 bugsRoutes(app);
 commentRoutes(app)
 
+app.use("/comments",router)
+
 // load .env file variables 
 dotenv.config()
 
@@ -29,13 +32,15 @@ dotenv.config()
 // todoRoutes(app)
 // userRoutes(app)
 // define the port : entry point to the server
-const port=process.env.PORT||8081
+const port = process.env.PORT || 8081
 
-// start the server
-//fun tells express to listen to all request entering through defined port 
-app.listen(port,()=>{
-    console.log(`Server is running on port: http://localhost:${port}`)
-})
+// start the server unless we're running tests
+if (process.env.NODE_ENV !== 'test') {
+    // fun tells express to listen to all request entering through defined port 
+    app.listen(port, () => {
+        console.log(`Server is running on port: http://localhost:${port}`)
+    })
+}
 
 
 
@@ -48,4 +53,7 @@ app.get('/',(_,res)=>{
 getPool()
     .then(()=>console.log("Database connected successfully"))
     .catch((err:any)=>console.log("Database connection failed"))
+
+// export the app for testing
+export { app }
 
