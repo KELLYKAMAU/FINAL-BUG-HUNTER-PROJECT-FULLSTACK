@@ -46,6 +46,7 @@
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "create-vite": "^8.2.0",
+    "cy": "^0.0.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.10",
