@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 // import modules 
-import *as userRepositories from '../Repositories/users.repository'
+import * as userRepositories from '../Repositories/users.repository'
 import { NewUser,UpdateUser,User } from '../Types/users.types'
 
 // load env variables 
@@ -73,6 +73,8 @@ export const loginUser=async(email:string,password:string)=>{
     if(!user){
         throw new Error('User not found')
     }
+
+    
     // compare is provide pass is same as hashed one in DB
     const isMatch = await bcrypt.compare(password,user.password_hash)
     if(!isMatch){
@@ -91,6 +93,8 @@ export const loginUser=async(email:string,password:string)=>{
     if(!secret) throw new Error('JWT is not defined')
     // generated token can be used as as a digitila identity of user for only 1 hour 
     const token=jwt.sign(payLoad,secret)
+
+    await userRepositories.loginUser(email,password)
 
     // return successful login 
     return{

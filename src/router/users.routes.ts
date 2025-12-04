@@ -10,7 +10,7 @@ const userRoutes = (app: Express) => {
     app.get("/users/:id", allRoles, userController.getUserById);
 
     // Create a new user
-    app.post("/users", adminOnly, userController.createUser);
+    app.post("/users",  userController.createUser);
 
     // Update an existing user
     app.patch("/users/:id",

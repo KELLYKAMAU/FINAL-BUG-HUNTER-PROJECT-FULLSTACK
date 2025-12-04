@@ -43,13 +43,13 @@ export const createUser = async (user: NewUser) => {
         .input('first_name', user.first_name)
         .input('last_name', user.last_name)
         .input('email', user.email)
-        .input('role_user', user.role_user)
+       
         .input('password_hash', user.password_hash || 'defaultpasswordhash')
         .input('created_at', new Date())
         .query(`
             INSERT INTO Users 
-            (first_name, last_name, email, role_user, password_hash, created_at)
-            VALUES (@first_name, @last_name, @email, @role_user, @password_hash, @created_at)
+            (first_name, last_name, email, password_hash, created_at)
+            VALUES (@first_name, @last_name, @email, @password_hash, @created_at)
         `);
     return { message: 'User created successfully' };
 };
@@ -98,4 +98,16 @@ export const getUserByEmail=async(email:string):Promise<User|null>=>{
     .input('email',email)
     .query('SELECT *FROM Users WHERE email=@email')
     return result.recordset[0] || null //available users returned otherwise null
+}
+
+
+
+export const loginUser=async(email:string, password_hash:string)=>{
+    const pool = await getPool();
+    const result= await pool
+    .request()
+    .input('email',email)
+    .input('password',password_hash)
+    .query('SELECT * FROM Users WHERE email=@email')
+   
 }

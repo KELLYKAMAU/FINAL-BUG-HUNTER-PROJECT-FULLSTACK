@@ -1,11 +1,10 @@
 // src/routes/auth.routes.ts
 import { Router } from "express";
-import {sendEmail} from "../services/emailService"
-import { registerUser } from "../controllers/auth.controller";
-
-
+import { sendEmail } from "../services/emailService";
+import { registerUser, loginUser } from "../controllers/auth.controller";
 
 const router = Router();
+
 router.get("/test-email", async (req, res) => {
   try {
     await sendEmail({
@@ -20,6 +19,8 @@ router.get("/test-email", async (req, res) => {
   }
 });
 
+// AUTH ROUTES
 router.post("/register", registerUser);
+router.post("/login", loginUser);
 
 export default router;

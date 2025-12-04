@@ -11,6 +11,12 @@ CREATE TABLE Users (
     updated_at DATETIME DEFAULT GETDATE()   -- useful when profile changes
 );
 
+
+
+ALTER TABLE Users
+
+ADD CONSTRAINT role_user DEFAULT 'developer' FOR role_user;
+
 -- Sample data for Users table
 INSERT INTO Users (first_name, last_name, email, role_user, password_hash, created_at)
 VALUES

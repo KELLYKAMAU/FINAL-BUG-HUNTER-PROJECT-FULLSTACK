@@ -94,11 +94,11 @@ export const loginUser=async(req:Request,res:Response)=>{
     } catch (error:any) {
         if(error.message=='User not found'){
             res.status(400).json({message:'User not found'})
-        }else if(error.message=="Invalid Credentials"){
+        }else if (error.message=="Invalid Credentials"){
             res.status(404).json({message:'Invalid Credentilas'})
         }else{
             res.status(500).json({message:'Internal Server Error'})
-        }
+        } 
         
     }
 }
