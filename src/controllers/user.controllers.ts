@@ -88,8 +88,8 @@ export const deleteUser = async (req:Request, res: Response) => {
 // user login function 
 export const loginUser=async(req:Request,res:Response)=>{
     try {
-        const {email,password}=req.body
-        const result= await userService.loginUser(email,password)
+        const {email,password_hash}=req.body
+        const result= await userService.loginUser(email,password_hash)
         res.status(200).json(result)
     } catch (error:any) {
         if(error.message=='User not found'){
